@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>THE OPEN GALAXY - Search</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<header th:include="blocks/header :: header"></header>
+<div class = "main" style="max-width: 700px; width: 100%">
+    <h1><i class="fa fa-search mr-2" aria-hidden="true"></i>Search</h1><br>
+    <form class="form-inline" method="get">
+        <input class="form-control mr-2" style="width:75%" name="query" placeholder="Search" th:value="${param.query}"><br>
+        <button class="btn btn-outline-dark" type="submit"><i class="fa fa-search mr-2" aria-hidden="true"></i>Search</button>
+        <br><br>
+        <label class="mr-2">Order by: </label>
+        <select class="form-control" id="status" name="order" style="width: 160px">
+            <option value="DESC">Descending Date</option>
+            <option value="ASC">Ascending Date</option>
+        </select>
+        <input type="submit" value="Change" class="btn btn-outline-dark ml-2"/>
+    </form>
+    <br>
+    <div th:if="${projects}">
+    <div th:each="p : ${projects}"><br>
+        <div class="card" style="width: 100%;">
+            <div class="card-body">
+                <div th:if="${p.image}">
+                    <img th:src="@{${p.image.toString()}}" style="width: auto%; max-height: 200px; display:block; margin:auto;"/><hr>
+                </div>
+                <a th:href="'/projects/detail/'+${p.id}"><h4 th:text="${p.title}"></h4></a>
+                <span><strong>Total Rate: </strong><span th:text="${p.rate}"></span></span><br>
+                <span><strong>Reviews: </strong> <span th:text="${p.reviews.size()}"></span></span>
+            </div>
+            <div class="card-footer">
+                <span><strong>Date: </strong> <span th:text="${p.pubDate}"></span></span> |
+                <span><strong>Views: </strong> <span th:text="${p.views}"></span></span> |
+                <span><strong>Author: </strong> <a th:text="${p.author.username}" th:href="'/user/' + ${p.author.username}"/></span>
+            </div>
+        </div>
+        <br>
+        <div th:if="${projects.hasNext()}">
+            <a class="btn btn-outline-dark ml-2"  th:href="'/projects/search?query='+${param.query}+'&order='+${orderType}+'&page='+${page+1}">Next</a>
+        </div>
+        <div th:if="${projects.hasPrevious()}">
+            <a class="btn btn-outline-dark ml-2"  th:href="'/projects/search?query='+${param.query}+'&order='+${orderType}+'&page='+${page-1}">Previous</a>
+        </div>
+    </div>
+    </div>
+</div>
+</body>
+</html>

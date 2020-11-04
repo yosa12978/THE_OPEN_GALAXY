@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>THE OPEN GALAXY - Recent</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<header th:include="blocks/header :: header"></header>
+<div class = "main" style="max-width: 700px; width: 100%"><br>
+    <h1><img th:src="@{${usr.userPic}}" style="width: auto%; max-height: 80px; display:block; margin:auto; float: left;" class="mr-2"/><span th:text="${usr.username}"></span></h1>
+    <br>
+    <form method="get" class="form-inline">
+        <label class="mr-2">Order by: </label>
+        <select class="form-control" id="status" name="order" style="width: 160px">
+            <option value="DESC">Descending Date</option>
+            <option value="ASC">Ascending Date</option>
+        </select>
+        <input type="submit" value="Change" class="btn btn-outline-dark ml-2"/>
+
+    </form>
+    <div th:each="p : ${projects}"><br>
+        <div class="card" style="width: 100%;">
+            <div class="card-body">
+                <div th:if="${p.image}">
+                    <img th:src="@{${p.image.toString()}}" style="width: auto%; max-height: 200px; display:block; margin:auto;"/><hr>
+                </div>
+                <a th:href="'/projects/detail/'+${p.id}"><h4 th:text="${p.title}"></h4></a>
+                <span><strong>Total Rate: </strong><span th:text="${p.rate}"></span></span><br>
+                <span><strong>Reviews: </strong> <span th:text="${p.reviews.size()}"></span></span>
+            </div>
+            <div class="card-footer">
+                <span><strong>Date: </strong> <span th:text="${p.pubDate}"></span></span> |
+                <span><strong>Views: </strong> <span th:text="${p.views}"></span></span> |
+                <span><strong>Author: </strong> <a th:text="${p.author.username}" th:href="'/user/' + ${p.author.username}"/></span> |
+                <span th:if="${#authentication.getName() == usr.username}">
+                <span class="card-text mb-2 text-muted"><a th:href="'/projects/delete/'+${p.id}" style="color: #E13434"><i class="fa fa-trash-o mr-2" aria-hidden="true"></i>Delete</a></span>
+                </span>
+            </div>
+        </div>
+        <br>
+        <div th:if="${projects.hasNext()}">
+            <a class="btn btn-outline-dark ml-2" th:href="'/user/'+${usr.username} + '?page='+${page + 1}">Next</a>
+        </div>
+        <div th:if="${projects.hasPrevious()}">
+            <a class="btn btn-outline-dark ml-2" th:href="'/user/'+${usr.username} + '?page='+${page - 1}">Previous</a>
+        </div>
+    </div>
+</body>
+</html>

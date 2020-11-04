@@ -1,0 +1,32 @@
+<div th:fragment="header">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="/img/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="/js/script.js"></script>
+    <div>
+            <ul>
+                <a href="/"><img src="/img/1.PNG" style="height: auto; width: 100%;"/></a>
+
+                <li><a href="/"><i class="fa fa-home mr-2"></i>Home</a></li>
+                <li><a href="/projects/recent"><i class="fa fa-bolt mr-2"></i>Recent</a></li>
+                <li><a href="/projects/top"><i class="fa fa-hashtag mr-2"></i>Top</a></li>
+                <li><a href="/projects/search"><i class="fa fa-search mr-2"></i>Search</a></li>
+                <li><a href="/projects/tags"><i class="fa fa-tags mr-2"></i>Tags</a></li>
+                <li><a href="/user/users/search"><i class="fa fa-users mr-2"></i>users</a></li>
+                <li><a href="/privacy"><i class="fa fa-lock mr-2"></i>Privacy</a></li>
+                <div sec:authorize="isAuthenticated()">
+                    <li><a href="/projects/create"><i class="fa fa-plus mr-2"></i>Create</a></li>
+                    <li><a th:href="'/user/' + ${#authentication.getPrincipal().getUsername()}"><i class="fa fa-user mr-2"></i>My Account</a></li>
+                    <li><a href="/logout"><i class="fa fa-sign-out  mr-2"></i>Logout</a></li>
+                </div>
+                <div sec:authorize="isAnonymous()">
+                    <li><a href="/login"><i class="fa fa-sign-in  mr-2"></i>Login</a></li>
+                    <li><a href="/signup"><i class="fa fa-user-plus  mr-2"></i>Signup</a></li>
+                </div>
+            </ul>
+    </div>
+</div>

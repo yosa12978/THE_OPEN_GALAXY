@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>THE OPEN GALAXY - Users</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<header th:include="blocks/header :: header"></header>
+<div class = "main" style="max-width: 700px; width: 100%">
+    <h1><i class="fa fa-users mr-2" aria-hidden="true"></i>Users</h1><br>
+    <form class="form-inline" method="get">
+        <input class="form-control mr-2" style="width:75%" name="query" placeholder="Username" th:value="${param.query}"><br>
+        <button class="btn btn-outline-dark" type="submit"><i class="fa fa-users mr-2" aria-hidden="true"></i>Search User</button>
+        <br><br>
+        <label class="mr-2">Order by: </label>
+        <select class="form-control" id="status" name="order" style="width: 160px">
+            <option value="DESC">Descending Date</option>
+            <option value="ASC">Ascending Date</option>
+        </select>
+        <input type="submit" value="Change" class="btn btn-outline-dark ml-2"/>
+    </form>
+    <br>
+
+    <div th:if="${users}">
+        <div th:each="u : ${users}"><br>
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                    <img th:src="@{${u.userPic}}" style="width: auto%; max-height: 50px; display:block; margin:auto; float: left;" class="mr-2"/>
+                    <a th:href="'/user/'+${u.id}"><h4 th:text="${u.username}"></h4></a>
+                </div>
+            </div>
+            <br>
+            <div th:if="${users.hasNext()}">
+                <a class="btn btn-outline-dark ml-2" th:href="'/user/users/search?query='+${userQuery}+'&order='+${orderType}+'&page='+${page+1}">Next</a>
+            </div>
+            <div th:if="${users.hasPrevious()}">
+                <a class="btn btn-outline-dark ml-2" th:href="'/user/users/search?query='+${userQuery}+'&order='+${orderType}+'&page='+${page-1}">Previous</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

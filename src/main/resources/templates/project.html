@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'THE OPEN GALAXY - ' + ${proj.title}">THE OPEN GALAXY</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<header th:include="blocks/header :: header"></header>
+<div class = "main" style="max-width: 700px; width: 100%">
+    <div th:if="${proj.image}">
+        <img th:src="@{${proj.image.toString()}}" style="width: auto%; max-height: 250px;" class="mt-2"/><hr>
+    </div>
+    <h1 th:text="${proj.title}"></h1>
+    <span><strong>Repository url: </strong><a th:href="${proj.url}" th:text="${proj.url}"></a></span>
+    <div th:if="${proj.description}">
+        <span><strong>Description: </strong> <span th:text="${proj.description}"></span></span>
+    </div>
+    <span><strong>Date: </strong> <span th:text="${proj.pubDate}"></span></span><br>
+    <span><strong>Views: </strong> <span th:text="${proj.views}"></span></span><br>
+    <span><strong>Author: </strong> <a th:text="${proj.author.username}" th:href="'/user/' + ${proj.author.username}"/></span><br>
+    <div th:if="${proj.tags}">
+        <div th:each="tag : ${proj.tags}">
+            <a th:href="'/projects/tags?tag=' + ${tag}" style="float: left;" class="mr-2 badge badge-warning" th:text="${tag}"></a>
+        </div><br>
+    </div>
+    <h3 th:text="'Total Rate: ' + ${proj.rate}"></h3>
+    <hr>
+    <h4><strong>Reviews: </strong> <span th:text="${proj.reviews.size()}"></span></h4><br>
+    <div sec:authorize="isAuthenticated()">
+        <div th:if="${hasReview == false}">
+            <form th:action="'/reviews/create/' + ${proj.id}" method="post">
+                <input type="radio" name="rateType" id="up" th:value="UP" checked>
+                <label for="up" class="Up"><i class="fa fa-arrow-up" style="color: #4FE14F; font-size: 20px;"></i></label>
+                <input type="radio" name="rateType" id="down" th:value="DOWN">
+                <label for="down" class="Down"><i class="fa fa-arrow-down" style="color: #E13434; font-size: 20px;"></i></label>
+                <br>
+                <textarea type="text" name="text" placeholder="Review Description(Optional)" class="form-control" style="width: 35rem" rows ="7" cols = "50"></textarea><br>
+                <input type="submit" value="Submit Review" class="btn btn-outline-dark" style="width: 35rem"/>
+            </form>
+        </div>
+        <div th:unless="${hasReview == false}">
+            <h3>Your Review:</h3>
+            <div class="card" style="width: 35rem;">
+                <div class="card-body">
+                    <span style="float: left">
+                        <span th:if="${ureview.rateType.name() == 'UP'}"><i class="fa fa-arrow-up mr-3" style="color: #4FE14F; font-size: 40px;"></i></span>
+                        <span th:if="${ureview.rateType.name() == 'DOWN'}"><i class="fa fa-arrow-down mr-3" style="color: #E13434; font-size: 40px;"></i></span>
+                    </span>
+                    <p class="card-text" th:text="${ureview.text}"></p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-text mb-2 text-muted">Author: <a th:text="${ureview.author.username}" th:href="'/user/' + ${ureview.author.username}"/></span> |
+                    <span class="card-text mb-2 text-muted" th:text="'Publication Date: ' + ${ureview.pubDate}"></span> |
+                    <span class="card-text mb-2 text-muted"><a th:href="'/reviews/delete/'+${ureview.id}" style="color: #E13434"><i class="fa fa-trash-o mr-2" aria-hidden="true"></i>Delete</a></span>
+                </div>
+            </div>
+            <hr>
+        </div>
+    </div>
+    <div sec:authorize="isAnonymous()">
+        <a href="/login" class="btn btn-outline-dark" style="width: 35rem"><i class="fa fa-sign-in  mr-2"></i>Login to leave reviews.</a>
+    </div>
+    <div th:if="${reviews}">
+        <div th:each="review : ${reviews}"><br>
+            <div class="card" style="width: 35rem;">
+                <div class="card-body">
+                    <span style="float: left">
+                        <span th:if="${review.rateType.name() == 'UP'}"><i class="fa fa-arrow-up mr-3" style="color: #4FE14F; font-size: 40px;"></i></span>
+                        <span th:if="${review.rateType.name() == 'DOWN'}"><i class="fa fa-arrow-down mr-3" style="color: #E13434; font-size: 40px;"></i></span>
+                    </span>
+                    <p class="card-text" th:text="${review.text}"></p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-text mb-2 text-muted">Author: <a th:text="${review.author.username}" th:href="'/user/' + ${review.author.username}"/></span> |
+                    <span class="card-text mb-2 text-muted" th:text="'Publication Date: ' + ${review.pubDate}"></span>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div th:if="${reviews.hasNext()}">
+            <a class="btn btn-outline-dark ml-2" th:href="'/projects/detail/'+${proj.id}+'?page='+${page+1}">Next</a>
+        </div>
+        <div th:if="${reviews.hasPrevious()}">
+            <a class="btn btn-outline-dark ml-2" th:href="'/projects/detail/'+${proj.id}+'?page='+${page-1}">Previous</a>
+        </div>
+        <br>
+    </div>
+    <div th:unless="${reviews}">
+        <h5>Project haven't reviews yet</h5>
+    </div>
+</div>
+</body>
+</html>

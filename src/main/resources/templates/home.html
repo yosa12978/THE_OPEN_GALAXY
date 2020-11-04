@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>THE OPEN GALAXY</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<header th:include="blocks/header :: header"></header>
+<div class = "main" style="max-width: 700px; width: 100%">
+    <h1>The Open Galaxy</h1><hr>
+    <h3>Recent projects</h3><hr>
+    <div th:each="p : ${projects}"><br>
+        <div class="card" style="width: 100%;">
+            <div class="card-body">
+                <div th:if="${p.image}">
+                    <img th:src="@{${p.image.toString()}}" style="width: auto%; max-height: 200px; display:block; margin:auto;"/><hr>
+                </div>
+                <a th:href="'/projects/detail/'+${p.id}"><h4 th:text="${p.title}"></h4></a>
+                <span><strong>Total Rate: </strong><span th:text="${p.rate}"></span></span><br>
+                <span><strong>Reviews: </strong> <span th:text="${p.reviews.size()}"></span></span>
+            </div>
+            <div class="card-footer">
+                <span><strong>Date: </strong> <span th:text="${p.pubDate}"></span></span> |
+                <span><strong>Views: </strong> <span th:text="${p.views}"></span></span> |
+                <span><strong>Author: </strong> <a th:text="${p.author.username}" th:href="'/user/' + ${p.author.username}"/></span>
+            </div>
+        </div>
+        <br>
+    </div>
+</body>
+</html>
